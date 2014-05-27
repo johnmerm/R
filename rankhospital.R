@@ -8,8 +8,9 @@ rankhospital <-function(state,outcome,num="best"){
   col <- paste(titleHead,gsub(" ",".",outcome),sep='')
   cnames <- colnames(data)
   col <- cnames[grep(col,cnames,ignore.case=TRUE)]
-  message(dim(col))
-  if (is.null(col)){
+  
+  
+  if (is.null(col) | length(col)==0){
     stop('invalid outcome')
   }
   

@@ -7,23 +7,46 @@ rankall <-function(outcome,num="best"){
   col <- paste(titleHead,gsub(" ",".",outcome),sep='')
   cnames <- colnames(data)
   col <- cnames[grep(col,cnames,ignore.case=TRUE)]
-  message(dim(col))
-  if (is.null(col)){
+  
+  if (is.null(col) | length(col)==0){
     stop('invalid outcome')
   }
   
+  
   ft <- data[,c("State","Hospital.Name",col)]
-  ft[,2] <- as.numeric(ft[,2])
+  ft[,3] <- as.numeric(ft[,3])
   ftc <- ft[complete.cases(ft),]
   
-  ord = ftc[order(ftc[2],ftc[1]),]
+  ftcs <- split(ftc,ftc$State)
   
-  if (num =="best"){
-    num = 1
-  }else if (num == 'worst'){
-    num = dim(ftc)[1]
+  rankstate <- function(piece){
+    if (num =="best"){
+      num = 1
+    }else if (num == 'worst'){
+      num = dim(piece)[1]
+    }
+    ord = piece[order(piece[3],piece[2]),]
+    return(ord[num,2])
   }
-  return(ord[num,1])
+  
+  ret <- lapply(ftcs,rankstate)
+  allstates <- unique(data$State)
+  
+  ret <- ret[allstates]
+  
+  ret <- matrix(unlist(ret))
+  ret <- cbind(ret,allstates)
+  
+  colnames(ret) <- c('hospital','state')
+  rownames(ret) <- allstates
+  
+  
+  return(data.frame(ret))
+  
+  
+  
+  
+  
   
   
 }
