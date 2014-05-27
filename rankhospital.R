@@ -4,9 +4,12 @@ rankhospital <-function(state,outcome,num="best"){
     stop('Invalid State')
   }
   
-  titleHead <- 'Hospital.30.Day.Death..Mortality..Rates.from.'
+  titleHead <- '^Hospital.30.Day.Death..Mortality..Rates.from.'
   col <- paste(titleHead,gsub(" ",".",outcome),sep='')
-  if (is.null(data[[col]])){
+  cnames <- colnames(data)
+  col <- cnames[grep(col,cnames,ignore.case=TRUE)]
+  message(dim(col))
+  if (is.null(col)){
     stop('invalid outcome')
   }
   

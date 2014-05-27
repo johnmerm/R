@@ -1,9 +1,7 @@
-best <- function(state,outcome){
-  num = 'best'
+rankall <-function(outcome,num="best"){
+  
   data <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
-  if (! state %in% data$State ){
-    stop('Invalid State')
-  }
+  
   
   titleHead <- '^Hospital.30.Day.Death..Mortality..Rates.from.'
   col <- paste(titleHead,gsub(" ",".",outcome),sep='')
@@ -14,7 +12,7 @@ best <- function(state,outcome){
     stop('invalid outcome')
   }
   
-  ft <- data[data$State == state,c("Hospital.Name",col)]
+  ft <- data[,c("State","Hospital.Name",col)]
   ft[,2] <- as.numeric(ft[,2])
   ftc <- ft[complete.cases(ft),]
   
